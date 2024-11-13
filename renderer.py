@@ -67,11 +67,13 @@ class HexRenderer:
             pygame.draw.circle(self.screen, self.WHITE, (int(center[0]), int(center[1])), 3)
             
             # Draw coordinates
+            '''
             coord_text = f"{coord[0]},{coord[1]}"
             font = pygame.font.Font(None, 20)
             text_surface = font.render(coord_text, True, self.WHITE)
             text_rect = text_surface.get_rect(center=(center[0], center[1] + 15))
             self.screen.blit(text_surface, text_rect)
+            '''
         
         # Draw lines with player colors
         state = self.game.get_state()

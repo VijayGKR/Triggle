@@ -57,7 +57,8 @@ class HexGame:
             
         new_triangles = self.add_connection(point1, point2)
 
-        if(self.get_scores()[1] >  (3 * self.hex_size - 3) * (self.hex_size - 1) or self.get_scores()[2] > (3 * self.hex_size - 3) * (self.hex_size - 1)):
+        if(self.get_scores()[1] > (3 * self.hex_size - 3) * (self.hex_size - 1) or self.get_scores()[2] > (3 * self.hex_size - 3) * (self.hex_size - 1)):
+            print(self.get_scores())
             self.game_over = True
             self.winner = 3 - self.current_player
         
@@ -224,6 +225,21 @@ class HexGame:
         self.current_player = 3 - self.current_player  # Toggles between 1 and 2
         
         return new_triangles
+
+    def copy(self):
+        """Returns a deep copy of the current game state"""
+        import copy
+        new_game = HexGame()
+        new_game.current_player = self.current_player
+        new_game.adjacency_list = copy.deepcopy(self.adjacency_list)
+        new_game.line_owners = copy.deepcopy(self.line_owners)
+        new_game.triangle_owners = copy.deepcopy(self.triangle_owners)
+        new_game.all_triangles = copy.deepcopy(self.all_triangles)
+        new_game.game_over = self.game_over
+        new_game.winner = self.winner
+        new_game.hex_size = self.hex_size
+        new_game.valid_points = copy.deepcopy(self.valid_points)
+        return new_game
 
 if __name__ == "__main__":
     game = HexGame()

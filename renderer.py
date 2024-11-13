@@ -27,7 +27,7 @@ class HexRenderer:
         self.selected_points = []
         
         # AI setup
-        self.ai_enabled = False
+        self.ai_enabled = True
         self.ai_agent = MinimaxAgent(player_number=2)  # AI plays as player 2
         
     def get_hex_center(self, row, col):

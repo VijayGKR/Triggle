@@ -13,11 +13,11 @@ class MinimaxAgent:
         beta = float('inf')
         
         valid_moves = game.get_valid_moves()
+        print(valid_moves)
         
         for move in valid_moves:
             # Create a copy of the game state
-            game_copy = HexGame()
-            game_copy.__dict__ = game.get_state()
+            game_copy = game.copy()
             
             # Make the move
             point1, point2 = move
@@ -31,7 +31,7 @@ class MinimaxAgent:
                     best_move = move
                 
                 alpha = max(alpha, best_score)
-                
+        print(best_score)
         return best_move
     
     def _minimax(self, game, depth, is_maximizing, alpha, beta):
@@ -49,8 +49,7 @@ class MinimaxAgent:
             max_eval = float('-inf')
             for move in valid_moves:
                 # Create a copy of the game state
-                game_copy = HexGame()
-                game_copy.__dict__ = game.get_state()
+                game_copy = game.copy()
                 
                 point1, point2 = move
                 result = game_copy.make_move(point1, point2)
@@ -66,8 +65,7 @@ class MinimaxAgent:
             min_eval = float('inf')
             for move in valid_moves:
                 # Create a copy of the game state
-                game_copy = HexGame()
-                game_copy.__dict__ = game.get_state()
+                game_copy = game.copy()
                 
                 point1, point2 = move
                 result = game_copy.make_move(point1, point2)
@@ -86,4 +84,9 @@ class MinimaxAgent:
         Returns a numerical score where higher is better for the agent
         """
         scores = game.get_scores()
-        return scores[self.player_number] - scores[3 - self.player_number]
+        if(game.winner == self.player_number):
+            return float('inf')
+        elif(game.winner == 3 - self.player_number):
+            return float('-inf')
+        else:
+            return scores[self.player_number] - scores[3 - self.player_number]

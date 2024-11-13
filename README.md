@@ -30,7 +30,6 @@ Inspired by:
 - [ ] Optimize game engine to allow for better search and porting to OpenAI Gym
 - [ ] Add alpha beta pruning
 - [ ] Try out MCTS
-- [ ] Add scoring system
 - [ ] Port to online to play with friends
 - [ ] Add new game with more players
 - [ ] Add new game mode with different rules:

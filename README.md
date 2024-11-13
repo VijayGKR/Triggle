@@ -32,11 +32,14 @@ Inspired by:
 - [ ] Try vanilla minimax vs alpha beta pruning with a compute / time restriction
 - [ ] Try to replicate Noam Brown's results on how much improvement can be gained by using more search / inference time compute
 - [ ] Optimize game engine to allow for better search and porting to OpenAI Gym
+- [ ] Try a NN approach that generalizes to several board sizes and shapes (different hex sizes)
+- [ ] Strategy intrepretability in natural language?
 - [ ] Add alpha beta pruning
 - [ ] Try out MCTS
 - [ ] Port to online to play with friends
-- [ ] Add new game with more players
+- [ ] Add new game with more players and teams
 - [ ] Add new game mode with different rules:
+  - Pregive only a certain types of lines to use tetris style
   - Line length must be 4
   - Some triangles are worth more points
   - Some points are removed from the grid

@@ -29,6 +29,8 @@ Inspired by:
 
 ## TODO
 - [ ] Experiment with playing AI against itself, right now with some randomness given the same minimax score, player 1 or 2 wins. Look into trying it a bunch of times and see if there is a clear winner, player 1 or 2 given the same policy.
+- [ ] Try vanilla minimax vs alpha beta pruning with a compute / time restriction
+- [ ] Try to replicate Noam Brown's results on how much improvement can be gained by using more search / inference time compute
 - [ ] Optimize game engine to allow for better search and porting to OpenAI Gym
 - [ ] Add alpha beta pruning
 - [ ] Try out MCTS

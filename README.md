@@ -1,5 +1,7 @@
 # Functional Triggle Game
 
+![Triggle Game Screenshot](./assets/gameplay.png)
+
 Inspired by:
 - [TikTok Demo](https://www.tiktok.com/@games4two/video/7318533546954509611?lang=en)
 - [Physical Game on Amazon](https://www.amazon.com/Triangle-Triggle-Rubber-Strategy-Players/dp/B0D9638ZHR)

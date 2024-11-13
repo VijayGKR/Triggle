@@ -106,8 +106,12 @@ class HexRenderer:
         self.screen.blit(score_surface, (10, 50))
 
         if self.game.game_over:
-            font = pygame.font.Font(None, 36)
-            text = f"Game over! Winner: Player {self.game.winner}"
+            if(self.game.winner == 0):
+                font = pygame.font.Font(None, 36)
+                text = f"Game over! Draw"
+            else:
+                font = pygame.font.Font(None, 36)
+                text = f"Game over! Winner: Player {self.game.winner}"
             text_surface = font.render(text, True, self.WHITE)
             self.screen.blit(text_surface, (10, 90))
         
@@ -122,7 +126,6 @@ class HexRenderer:
                 best_move = self.ai_agent.get_move(self.game)
                 if best_move:
                     point1, point2 = best_move
-                    print(point1, point2)
                     self.game.make_move(point1, point2)
             
             for event in pygame.event.get():
@@ -139,7 +142,7 @@ class HexRenderer:
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:  # Left click
                         # Only process clicks if it's human's turn
-                        if not self.ai_enabled or self.game.current_player != self.ai_agent.player_number:
+                        if not self.ai_enabled or self.game.current_player != self.ai_agent.player_number and not self.game.game_over:
                             coord = self.get_nearest_hex_point(pygame.mouse.get_pos())
                             if coord:
                                 if not self.selected_points:

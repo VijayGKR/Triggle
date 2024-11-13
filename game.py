@@ -33,11 +33,14 @@ class HexGame:
         """Returns list of all valid moves (point1, point2) that can be made"""
         valid_moves = set()
         points = self.get_valid_points()
+        
+        
         for p1 in points:
-            for p2 in points:
+            for p2 in points:                
                 if self.is_valid_connection(p1, p2):
                     if tuple(sorted([p1, p2])) not in self.line_owners:
                         valid_moves.add(tuple(sorted([p1, p2])))
+
         return valid_moves
     
     def make_move(self, point1, point2):
@@ -58,9 +61,12 @@ class HexGame:
         new_triangles = self.add_connection(point1, point2)
 
         if(self.get_scores()[1] > (3 * self.hex_size - 3) * (self.hex_size - 1) or self.get_scores()[2] > (3 * self.hex_size - 3) * (self.hex_size - 1)):
-            print(self.get_scores())
             self.game_over = True
             self.winner = 3 - self.current_player
+
+        if(self.get_scores()[1] == (3 * self.hex_size - 3) * (self.hex_size - 1) and self.get_scores()[2] == (3 * self.hex_size - 3) * (self.hex_size - 1)):
+            self.game_over = True
+            self.winner = 0
         
         return {
             'valid': True,
@@ -97,6 +103,9 @@ class HexGame:
         self.__init__()
 
     def is_valid_connection(self,point1, point2):
+
+
+        
         row1, col1 = point1
         row2, col2 = point2
 
@@ -113,13 +122,31 @@ class HexGame:
         
         # Only row changing
         if col1 == col2:
+            for row in range(min(row1, row2), max(row1, row2)):
+                point = (row, col1)
+                next_point = (row + 1, col1)
+                if(point in self.adjacency_list.get(next_point, set())):
+                    return False
+                
             return True
         # Only column changing
         elif row1 == row2:
+            for col in range(min(col1, col2), max(col1, col2)):
+                point = (row1, col)
+                next_point = (row1, col + 1)
+                if(point in self.adjacency_list.get(next_point, set())):
+                    return False
+                
             return True
         
-        # Both changing by 1
+        # Both changing equally
         elif row_diff == col_diff:
+            for i in range(abs(row2 - row1)):
+                point = (min(row1, row2) + i, min(col1, col2) + i)
+                next_point = (min(row1, row2) + i + 1, min(col1, col2) + i + 1)
+                if(point in self.adjacency_list.get(next_point, set())):
+                    return False
+                
             return True
         return False
     
@@ -141,8 +168,8 @@ class HexGame:
                     if neighbor2 in self.adjacency_list.get(neighbor1, set()):
                         # Sort points to ensure unique triangle representation
                         triangle = tuple(sorted([point, neighbor1, neighbor2]))
-                        triangles.add(triangle)   
-        
+                        triangles.add(triangle)  
+
         return triangles
 
     def add_connection(self,point1, point2):
@@ -225,7 +252,7 @@ class HexGame:
         self.current_player = 3 - self.current_player  # Toggles between 1 and 2
         
         return new_triangles
-
+    
     def copy(self):
         """Returns a deep copy of the current game state"""
         import copy

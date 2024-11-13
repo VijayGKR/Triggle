@@ -1,6 +1,6 @@
 # Functional Triggle Game
 
-![Triggle Game Screenshot](./assets/gameplay.png)
+![Triggle Game Screenshot](./assets/gameplay.gif)
 
 Inspired by:
 - [TikTok Demo](https://www.tiktok.com/@games4two/video/7318533546954509611?lang=en)

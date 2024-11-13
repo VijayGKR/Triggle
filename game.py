@@ -8,9 +8,10 @@ class HexGame:
         self.game_over = False
         self.winner = None
         self.hex_size = 3
-        self.valid_points = self.get_valid_points()
+        self.valid_points = self.init_valid_points()
+        self.valid_moves = self.init_valid_moves()
         
-    def get_valid_points(self):
+    def init_valid_points(self):
         """Returns list of all valid (row, col) coordinates on the hex grid"""
         valid_points = []
         # First half - increasing columns (including middle row)
@@ -29,17 +30,37 @@ class HexGame:
                 
         return valid_points
     
-    def get_valid_moves(self):
+    def init_valid_moves(self):
         """Returns list of all valid moves (point1, point2) that can be made"""
         valid_moves = set()
-        points = self.get_valid_points()
-        
+        points = self.valid_points
         
         for p1 in points:
-            for p2 in points:                
-                if self.is_valid_connection(p1, p2):
-                    if tuple(sorted([p1, p2])) not in self.line_owners:
-                        valid_moves.add(tuple(sorted([p1, p2])))
+            for p2 in points:  
+                row1, col1 = p1
+                row2, col2 = p2
+
+                if p1 == p2:
+                    continue
+                
+                # Sort points so row1 <= row2
+                if row1 > row2:
+                    row1, row2 = row2, row1
+                    col1, col2 = col2, col1
+                
+                row_diff = row2 - row1
+                col_diff = col2 - col1
+                
+                # Only row changing
+                if col1 == col2:
+                    valid_moves.add(tuple(sorted([p1, p2])))
+                # Only column changing
+                elif row1 == row2:
+                    valid_moves.add(tuple(sorted([p1, p2])))
+                
+                # Both changing equally
+                elif row_diff == col_diff:
+                    valid_moves.add(tuple(sorted([p1, p2])))
 
         return valid_moves
     
@@ -103,52 +124,7 @@ class HexGame:
         self.__init__()
 
     def is_valid_connection(self,point1, point2):
-
-
-        
-        row1, col1 = point1
-        row2, col2 = point2
-
-        if point1 == point2:
-            return False
-        
-        # Sort points so row1 <= row2
-        if row1 > row2:
-            row1, row2 = row2, row1
-            col1, col2 = col2, col1
-        
-        row_diff = row2 - row1
-        col_diff = col2 - col1
-        
-        # Only row changing
-        if col1 == col2:
-            for row in range(min(row1, row2), max(row1, row2)):
-                point = (row, col1)
-                next_point = (row + 1, col1)
-                if(point in self.adjacency_list.get(next_point, set())):
-                    return False
-                
-            return True
-        # Only column changing
-        elif row1 == row2:
-            for col in range(min(col1, col2), max(col1, col2)):
-                point = (row1, col)
-                next_point = (row1, col + 1)
-                if(point in self.adjacency_list.get(next_point, set())):
-                    return False
-                
-            return True
-        
-        # Both changing equally
-        elif row_diff == col_diff:
-            for i in range(abs(row2 - row1)):
-                point = (min(row1, row2) + i, min(col1, col2) + i)
-                next_point = (min(row1, row2) + i + 1, min(col1, col2) + i + 1)
-                if(point in self.adjacency_list.get(next_point, set())):
-                    return False
-                
-            return True
-        return False
+        return tuple(sorted([point1, point2])) in self.valid_moves
     
     def find_triangles_for_line(self,points):
         triangles = set()
@@ -207,6 +183,11 @@ class HexGame:
                         self.adjacency_list[next_point] = set()
                     self.adjacency_list[curr_point].add(next_point)
                     self.adjacency_list[next_point].add(curr_point)
+                
+            for row in range(min(row1, row2), max(row1, row2) + 1):
+                for row_2 in range(row, max(row1, row2) + 1):
+                    self.valid_moves.discard(tuple(sorted([(row, col1), (row_2, col1)])))   
+
         
         # If only column is changing, connect all intermediate points
         elif row1 == row2:
@@ -221,7 +202,11 @@ class HexGame:
                         self.adjacency_list[next_point] = set()
                     self.adjacency_list[curr_point].add(next_point)
                     self.adjacency_list[next_point].add(curr_point)
-        
+            
+            for col in range(min(col1, col2), max(col1, col2) + 1):
+                for col_2 in range(col, max(col1, col2) + 1):
+                    self.valid_moves.discard(tuple(sorted([(row1, col), (row1, col_2)])))   
+
         # If both row and column are changing, connect all intermediate points diagonally
         else:
             for i in range(abs(row2 - row1)):
@@ -234,6 +219,10 @@ class HexGame:
                     self.adjacency_list[next_point] = set()
                 self.adjacency_list[curr_point].add(next_point)
                 self.adjacency_list[next_point].add(curr_point)
+            
+            for i in range(abs(row2 - row1)):
+                for i_2 in range(i, abs(row2 - row1) + 1):
+                    self.valid_moves.discard(tuple(sorted([(min(row1, row2) + i, min(col1, col2) + i), (min(row1, row2) + i_2, min(col1, col2) + i_2)])))
 
         # Store the line owner
         line = tuple(sorted([p1, p2]))

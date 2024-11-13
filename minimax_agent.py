@@ -10,8 +10,8 @@ class MinimaxAgent:
         best_score = float('-inf')
         best_move = None
 
-        valid_moves = game.get_valid_moves()
-        #print(f"Valid moves: {valid_moves}")
+        valid_moves = game.valid_moves
+        print(f"Valid moves: {valid_moves}")
 
         for move in valid_moves:
             # Create a copy of the game state
@@ -53,7 +53,7 @@ class MinimaxAgent:
         if depth == 0:
             return self._evaluate_position(game)
 
-        valid_moves = game.get_valid_moves()
+        valid_moves = game.valid_moves
 
         if is_maximizing:
             max_eval = float('-inf')

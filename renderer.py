@@ -105,12 +105,17 @@ class HexRenderer:
         score_surface = font.render(score_text, True, self.WHITE)
         self.screen.blit(score_surface, (10, 50))
 
+        # Add instructions for AI toggle and reset
+        ai_status = "ON" if self.ai_enabled else "OFF"
+        instructions_text = f"Press 'A' to toggle AI ({ai_status}) | Press 'R' to reset game"
+        instructions_surface = font.render(instructions_text, True, self.WHITE)
+        self.screen.blit(instructions_surface, (10, self.WINDOW_HEIGHT - 30))
+
+        # Game over text (existing code)
         if self.game.game_over:
             if(self.game.winner == 0):
-                font = pygame.font.Font(None, 36)
                 text = f"Game over! Draw"
             else:
-                font = pygame.font.Font(None, 36)
                 text = f"Game over! Winner: Player {self.game.winner}"
             text_surface = font.render(text, True, self.WHITE)
             self.screen.blit(text_surface, (10, 90))

@@ -1,5 +1,5 @@
 from game import HexGame
-
+import random
 class MinimaxAgent:
     def __init__(self, player_number):
         self.player_number = player_number
@@ -22,12 +22,19 @@ class MinimaxAgent:
             result = game_copy.make_move(point1, point2)
 
             if result['valid']:
-                # For each move, start with fresh alpha and beta
+
                 score = self._minimax(game_copy, self.max_depth - 1, False)
 
                 if score > best_score:
                     best_score = score
                     best_move = move
+
+                if score == best_score:
+                    if random.choice([True, False]):
+                        best_move = move
+
+        if(best_move is None and len(valid_moves) > 0):
+            best_move = random.choice(list(valid_moves))
 
         #print(f"Best move: {best_move} with score: {best_score}")
         return best_move

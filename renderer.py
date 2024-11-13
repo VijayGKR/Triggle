@@ -27,8 +27,10 @@ class HexRenderer:
         self.selected_points = []
         
         # AI setup
-        self.ai_enabled = True
-        self.ai_agent = MinimaxAgent(player_number=2)  # AI plays as player 2
+        self.player_vs_ai = False
+        self.ai_vs_ai = False
+        self.ai_agent_1 = MinimaxAgent(player_number=1)  # AI plays as player 1
+        self.ai_agent_2 = MinimaxAgent(player_number=2)  # AI plays as player 2
         
     def get_hex_center(self, row, col):
         """Calculate the center position of each hexagon"""
@@ -107,11 +109,22 @@ class HexRenderer:
         score_surface = font.render(score_text, True, self.WHITE)
         self.screen.blit(score_surface, (10, 50))
 
+        player_vs_ai_status  = "ON" if self.player_vs_ai else "OFF"
+        ai_vs_ai_status = "ON" if self.ai_vs_ai else "OFF"
+
         # Add instructions for AI toggle and reset
-        ai_status = "ON" if self.ai_enabled else "OFF"
-        instructions_text = f"Press 'A' to toggle AI ({ai_status}) | Press 'R' to reset game"
-        instructions_surface = font.render(instructions_text, True, self.WHITE)
-        self.screen.blit(instructions_surface, (10, self.WINDOW_HEIGHT - 30))
+        small_font = pygame.font.Font(None, 24)  # Smaller font size
+        instructions = [
+            f"Press 'A' to toggle AI ({player_vs_ai_status})",
+            f"Press 'V' to toggle AI vs AI ({ai_vs_ai_status})",
+            "Press 'R' to reset game"
+        ]
+        
+        y_offset = 10  # Starting y position
+        for line in instructions:
+            instructions_surface = small_font.render(line, True, self.WHITE)
+            self.screen.blit(instructions_surface, (self.WINDOW_WIDTH - 250, y_offset))
+            y_offset += 25  # Space between lines
 
         # Game over text (existing code)
         if self.game.game_over:
@@ -127,14 +140,29 @@ class HexRenderer:
     def run(self):
         """Main game loop"""
         running = True
+        self.draw()
         while running:
             # If it's AI's turn, make AI move
-            if self.ai_enabled and self.game.current_player == self.ai_agent.player_number and not self.game.game_over:
-                best_move = self.ai_agent.get_move(self.game)
-                if best_move:
-                    point1, point2 = best_move
-                    self.game.make_move(point1, point2)
-            
+            if self.player_vs_ai:
+                if self.game.current_player == self.ai_agent_2.player_number and not self.game.game_over:
+                    best_move = self.ai_agent_2.get_move(self.game)
+
+                    if best_move:
+                        point1, point2 = best_move
+                        self.game.make_move(point1, point2)
+            elif self.ai_vs_ai:
+                if self.game.current_player == self.ai_agent_1.player_number and not self.game.game_over:
+                    best_move = self.ai_agent_1.get_move(self.game)
+                    if best_move:
+                        point1, point2 = best_move
+                        self.game.make_move(point1, point2)
+
+                if self.game.current_player == self.ai_agent_2.player_number and not self.game.game_over:
+                    best_move = self.ai_agent_2.get_move(self.game)
+                    if best_move:
+                        point1, point2 = best_move
+                        self.game.make_move(point1, point2)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -145,11 +173,13 @@ class HexRenderer:
                         self.game.reset()
                         self.selected_points = []
                     elif event.key == pygame.K_a:  # Toggle AI
-                        self.ai_enabled = not self.ai_enabled
+                        self.player_vs_ai = not self.player_vs_ai
+                    elif event.key == pygame.K_v:
+                        self.ai_vs_ai = not self.ai_vs_ai
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:  # Left click
                         # Only process clicks if it's human's turn
-                        if not self.ai_enabled or self.game.current_player != self.ai_agent.player_number and not self.game.game_over:
+                        if not self.player_vs_ai or not self.ai_vs_ai or self.game.current_player != self.ai_agent_1.player_number and not self.game.game_over:
                             coord = self.get_nearest_hex_point(pygame.mouse.get_pos())
                             if coord:
                                 if not self.selected_points:

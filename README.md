@@ -27,6 +27,7 @@ Inspired by:
 4. Have fun!
 
 ## TODO
+- [ ] Experiment with playing AI against itself, right now if with some randomness given the same minimax score, player 1 or 2 wins. Look into trying it a bunch of times and see if there is a clear winner, player 1 or 2 given the same policy.
 - [ ] Optimize game engine to allow for better search and porting to OpenAI Gym
 - [ ] Add alpha beta pruning
 - [ ] Try out MCTS

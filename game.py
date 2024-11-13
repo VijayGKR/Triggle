@@ -254,9 +254,9 @@ class HexGame:
         return new_triangles
     
     def copy(self):
-        """Returns a deep copy of the current game state"""
+        """Returns a deep copy of the current game state without initialization"""
         import copy
-        new_game = HexGame()
+        new_game = object.__new__(HexGame)  # Create new instance without __init__
         new_game.current_player = self.current_player
         new_game.adjacency_list = copy.deepcopy(self.adjacency_list)
         new_game.line_owners = copy.deepcopy(self.line_owners)
@@ -265,7 +265,7 @@ class HexGame:
         new_game.game_over = self.game_over
         new_game.winner = self.winner
         new_game.hex_size = self.hex_size
-        new_game.valid_points = copy.deepcopy(self.valid_points)
+        new_game.valid_points = self.valid_points  # No need to copy since it's immutable
         return new_game
 
 if __name__ == "__main__":
